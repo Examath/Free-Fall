@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Orbiter</title>
+</head>
+
+<body>
+    <script src="SpaceSim/KeyController.js"></script>
+    <script src="SpaceSim.js"></script>
+    <script>
+canvas = new SpaceSim(Update);
+{
+    var o = new SpaceObject(100,0,0,220);
+    o.Forces.push(new KeyControllerForce());
+    canvas.Objects.push(o);
+}
+canvas.Objects.push(new SpaceObject(0,400,-110,0,"#00ff00"));
+function Update() {
+    canvas.Update();
+    //Orb.Update();
+}
+    </script>
+    <!-- <div id="x"></div>
+    <div id="y"></div>
+    <div id="vx"></div>
+    <div id="vy"></div>
+    <div id="a"></div>
+    <div id="d"></div>
+    <div id=""></div>
+    <div id=""></div>
+    <div id=""></div> -->
+</body>
+
+</html>
