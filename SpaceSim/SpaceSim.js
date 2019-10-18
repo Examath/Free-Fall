@@ -1,4 +1,7 @@
 "use strict"
+/// <reference path="Cartesian.js" />
+/// <reference path="KeyController.js" />
+/// <reference path="Renderer.js" />
 
 // $(function () {
 //     //import {KeyController, KeyControllerForce} from "SpaceSim\KeyController.mjs";
@@ -53,77 +56,6 @@ class SpaceObject {
     };
 }
 
-// var KeyController = {
-//     KeyPressed: false,
-//     Start: function () {
-//         window.addEventListener('keydown', function (e) {
-//             this.KeyController.KeyPressed = e.keyCode;
-//           })
-//         window.addEventListener('keyup', function (e) {
-//             this.KeyController.KeyPressed = false;
-//         })
-//     }
-// }
-// KeyController
-// class KeyControllerForce {
-//     Get () {
-//         switch (KeyController.KeyPressed) {
-//             case 37: //Left
-//                 return new Vector(-1,0);
-//                 break;
-//             case 38: //Up
-//                 return new Vector(0,1);
-//                 break;
-//             case 39: //Right
-//                 return new Vector(1,0);
-//                 break;
-//             case 40: //Down
-//                 return new Vector(0,-1);
-//                 break;        
-//             default:
-//                 break;
-//         }
-//     }
-// }
-
-class Coordinate {
-    constructor(x, y) {
-        this.X = x;
-        this.Y = y;
-    }
-    Add(V, Rate) {
-        this.X += V.X / Rate;
-        this.Y += V.Y / Rate;
-    };
-    get Angle() {
-        return Math.atan(this.Y / this.X);
-    }
-    get RX() {
-        return this.X / this.Distance;
-    }
-    get RY() {
-        return this.Y / this.Distance;
-    }
-    get Influence() {
-        return this.X ** 2 + this.Y ** 2;
-    }
-    get Distance() {
-        return Math.sqrt(this.X ** 2 + this.Y ** 2);
-    }
-}
-
-class Vector {
-    constructor(x, y) {
-        this.X = x;
-        this.Y = y;
-    }
-    Add(V) {
-        if (!V) return;
-        this.X += V.X;
-        this.Y += V.Y;
-    };
-}
-
 var GlobalForce = {
     Gravity: 9.8,
     CentralMass: 5000,
@@ -134,11 +66,4 @@ var GlobalForce = {
         var force = new Vector(x, y);
         return force;
     }
-}
-
-function Circle(Context, x, y, r, colour = "#ffffff") {
-    Context.fillStyle = colour;
-    Context.beginPath();
-    Context.arc(x, -y, r, 0, 2 * Math.PI);
-    Context.fill();
 }

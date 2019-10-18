@@ -9,12 +9,14 @@
 </head>
 
 <body>
+    <script src="SpaceSim/Cartesian.js"></script>
     <script src="SpaceSim/KeyController.js"></script>
+    <script src="SpaceSim/Renderer.js"></script>
     <script src="SpaceSim/SpaceSim.js"></script>
     <script>
 canvas = new SpaceSim(Update);
 {
-    var o = new SpaceObject(100,0,0,220);
+    var o = new SpaceObject(0,300,-55,0);
     o.Forces.push(new KeyControllerForce());
     canvas.Objects.push(o);
 }
@@ -23,6 +25,7 @@ function Update() {
     canvas.Update();
     //Orb.Update();
 }
+KeyController.Start();
     </script>
     <!-- <div id="x"></div>
     <div id="y"></div>
