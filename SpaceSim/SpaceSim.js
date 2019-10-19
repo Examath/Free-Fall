@@ -1,7 +1,7 @@
 "use strict"
 /// <reference path="Cartesian.js" />
-/// <reference path="KeyController.js" />
 /// <reference path="Renderer.js" />
+/// <reference path="Input.js" />
 
 // $(function () {
 //     //import {KeyController, KeyControllerForce} from "SpaceSim\KeyController.mjs";
@@ -10,26 +10,60 @@
 class SpaceSim {
     constructor(UpdateCall, w = 2600, h = 1500) {
         this.Rate = 100,
-            this.Element = document.createElement("canvas");
-        this.Element.width = w;
-        this.Element.height = h;
-        this.Context = this.Element.getContext("2d");
+        
+        this.Root = document.createElement("div");
+        this.Root.classList.add("SpaceSimRoot");
+        this.Canvas = document.createElement("canvas");
+        this.Canvas.width = w;
+        this.Canvas.height = h;
+        this.Context = this.Canvas.getContext("2d");
+        //this.UIRoot = ;
+        //this.UIRoot.classList.add("SpaceSimUIRoot");
+        this.UI = {
+            Root: document.createElement("div"),
+            Toolbar: {
+                Root: document.createElement("div"),
+                Tools: [new Tool("Select", true), new Tool("Pan"), new Tool("Zoom")],
+                Start: function() {                        
+                    this.Root.classList.add("UIToolBar");
+                    this.Tools.forEach(tool => {
+                        this.Root.appendChild(tool.Root);
+                    });
+                }
+            },
+            Start: function() {
+                this.Root.classList.add("SpaceSimUIRoot");
+                this.Toolbar.Start();
+                this.Root.appendChild(this.Toolbar.Root);
+            }
+        }
+        this.UI.Start();
+        this.Renderer = {
+            X: 0,
+            Y: 0,
+            Z: 1
+        }
 
-        this.Context.translate(this.Element.width / 2, this.Element.height / 2);
         this.Context.fillStyle = "#000000";
-        this.Context.fillRect(-this.Element.width / 2, -this.Element.height / 2, this.Element.width, this.Element.height);
+        this.Context.fillRect(0, 0, this.Canvas.width, this.Canvas.height);
+     
+        document.body.insertBefore(this.Root, document.body.childNodes[0]);
+        this.Root.appendChild(this.Canvas);
+        this.Root.appendChild(this.UI.Root);
 
-        document.body.insertBefore(this.Element, document.body.childNodes[0]);
         this.Objects = [];
         this.Interval = setInterval(UpdateCall, 1000 / this.Rate);
     }
-    Update() {
+    Update() {  
+        this.Context.save();    
+        this.Context.translate(this.Canvas.width / 2 + this.Renderer.X, this.Canvas.height / 2 + this.Renderer.Y);
         this.Context.fillStyle = "rgba(0, 0, 0, 0.01)";
-        this.Context.fillRect(-this.Element.width / 2, -this.Element.height / 2, this.Element.width, this.Element.height);
+        this.Context.fillRect(-this.Canvas.width / 2, -this.Canvas.height / 2, this.Canvas.width, this.Canvas.height);
         Circle(this.Context, 0, 0, 10);
         this.Objects.forEach(element => {
             element.Update(this.Context, this.Rate);
-        });
+        });  
+        this.Context.restore();  
     }
 }
 
