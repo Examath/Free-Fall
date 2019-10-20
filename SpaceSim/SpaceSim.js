@@ -4,7 +4,7 @@
 /// <reference path="Input.js" />
 
 // $(function () {
-//     //import {KeyController, KeyControllerForce} from "SpaceSim\KeyController.mjs";
+//     import {KeyController, KeyControllerForce} from "SpaceSim\KeyController.mjs";
 // })
 
 class SpaceSim {
@@ -17,8 +17,7 @@ class SpaceSim {
         this.Canvas.width = w;
         this.Canvas.height = h;
         this.Context = this.Canvas.getContext("2d");
-        //this.UIRoot = ;
-        //this.UIRoot.classList.add("SpaceSimUIRoot");
+        //this.UIRoot = ;ceSimUIRoot");
         this.UI = {
             Root: document.createElement("div"),
             Toolbar: {
@@ -26,12 +25,15 @@ class SpaceSim {
                 Tools: [new Tool("Select", true), new Tool("Pan"), new Tool("Zoom")],
                 Start: function() {                        
                     this.Root.classList.add("UIToolBar");
+                    this.Root.addEventListener('ToolSelectionChanged');
+                    this.Root.
                     this.Tools.forEach(tool => {
                         this.Root.appendChild(tool.Root);
                     });
                 }
             },
             Start: function() {
+        //this.UIRoot.classList.add("Spa
                 this.Root.classList.add("SpaceSimUIRoot");
                 this.Toolbar.Start();
                 this.Root.appendChild(this.Toolbar.Root);
@@ -100,4 +102,13 @@ var GlobalForce = {
         var force = new Vector(x, y);
         return force;
     }
+}
+
+var UniqueID {
+    Prefixes: [],
+    Count: [],
+    Get: function (prefix) {
+        this.Prefixes.forEach(pf => {
+            
+        });
 }
