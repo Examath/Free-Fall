@@ -8,35 +8,42 @@
 // })
 
 class SpaceSim {
-    constructor(UpdateCall, w = 2600, h = 1500) {
-        this.Rate = 100,
-        
+    constructor(updatecall, DrawCall, w = 2600, h = 1500) {
+        this._Rate = 100;
         this.Root = document.createElement("div");
         this.Root.classList.add("SpaceSimRoot");
         this.Canvas = document.createElement("canvas");
+        this.ID = UniqueID.Get("SpaceSimCanvas");
+        this.Canvas.id = this.ID;
         this.Canvas.width = w;
         this.Canvas.height = h;
-        this.Context = this.Canvas.getContext("2d");
-        //this.UIRoot = ;ceSimUIRoot");
+        this.Context = this.Canvas.getContext("2d", { alpha: false });
         this.UI = {
             Root: document.createElement("div"),
             Toolbar: {
                 Root: document.createElement("div"),
-                Tools: [new Tool("Select", true), new Tool("Pan"), new Tool("Zoom")],
-                Start: function() {                        
+                Tools: [new Tool("Select", 0, true), new Tool("Pan", 1), new Tool("Zoom", 2)],
+                SelectedTool: 0,
+                Start: function () {
                     this.Root.classList.add("UIToolBar");
-                    this.Root.addEventListener('ToolSelectionChanged');
-                    this.Root.
                     this.Tools.forEach(tool => {
                         this.Root.appendChild(tool.Root);
                     });
+                },
+                Update: function () {
+                    if (Tool.SelectionChangedFlag && this.Tools[Tool.SelectedRefrenceIndex].Selected) {
+                        this.SelectedTool = Tool.SelectedRefrenceIndex;
+                        Tool.SelectionChangedFlag = false;
+                    }
                 }
             },
-            Start: function() {
-        //this.UIRoot.classList.add("Spa
+            Start: function () {
                 this.Root.classList.add("SpaceSimUIRoot");
                 this.Toolbar.Start();
                 this.Root.appendChild(this.Toolbar.Root);
+            },
+            Update: function () {
+                this.Toolbar.Update();
             }
         }
         this.UI.Start();
@@ -46,26 +53,52 @@ class SpaceSim {
             Z: 1
         }
 
-        this.Context.fillStyle = "#000000";
-        this.Context.fillRect(0, 0, this.Canvas.width, this.Canvas.height);
-     
         document.body.insertBefore(this.Root, document.body.childNodes[0]);
         this.Root.appendChild(this.Canvas);
         this.Root.appendChild(this.UI.Root);
 
         this.Objects = [];
-        this.Interval = setInterval(UpdateCall, 1000 / this.Rate);
+        this.UpdateCall = updatecall;
+        this.Interval = setInterval(updatecall, 1000 / this.Rate);
+        window.requestAnimationFrame(DrawCall);
     }
-    Update() {  
-        this.Context.save();    
+    Update() {
+        var t = performance.now();
+        this.UI.Update();
+        this.Objects.forEach(element => {
+            element.Update(this.Rate);
+        });
+        if (MouseInputManager.MouseDown && MouseInputManager.MouseTarget == this.ID) {
+            this.Pan();
+        }
+        document.getElementById("fu").innerHTML = performance.now() - t;
+    }
+    Draw(DrawCall) {
+        var t = performance.now();
+        this.Context.clearRect(0, 0, this.Canvas.width, this.Canvas.height);
+        this.Context.fillStyle = "#000000";
+        this.Context.fillRect(0, 0, this.Canvas.width, this.Canvas.height);
+        this.Context.save();
         this.Context.translate(this.Canvas.width / 2 + this.Renderer.X, this.Canvas.height / 2 + this.Renderer.Y);
-        this.Context.fillStyle = "rgba(0, 0, 0, 0.01)";
-        this.Context.fillRect(-this.Canvas.width / 2, -this.Canvas.height / 2, this.Canvas.width, this.Canvas.height);
         Circle(this.Context, 0, 0, 10);
         this.Objects.forEach(element => {
-            element.Update(this.Context, this.Rate);
-        });  
-        this.Context.restore();  
+            element.Draw(this.Context);
+        });
+        this.Context.restore();
+        window.requestAnimationFrame(DrawCall); //TODO: improve
+        document.getElementById("fd").innerHTML = performance.now() - t;
+    }
+    Pan() { 
+        this.Renderer.X += MouseInputManager.MouseDelta.X;
+        this.Renderer.Y += MouseInputManager.MouseDelta.Y;
+    }
+    get Rate() {
+        return this._Rate;
+    }
+    set Rate(x) {
+        this._Rate = x;
+        clearInterval(this.Interval);
+        this.Interval = setInterval(this.UpdateCall, 1000 / x);
     }
 }
 
@@ -75,6 +108,7 @@ class SpaceObject {
         this.Velocity = new Vector(VelocityX, VelocityY);
         this.Forces = [];
         this.Colour = Col;
+        this.Trail = new Trail(Col);
         /*document.getElementById("x").innerHTML = "X" + this.Position.X;
         document.getElementById("y").innerHTML = "Y" + this.Position.Y;
         document.getElementById("vx").innerHTML = "Vx" + this.Velocity.X;
@@ -82,14 +116,18 @@ class SpaceObject {
         document.getElementById("a").innerHTML = "Angle" + this.Position.Angle * (180 / Math.PI);
         document.getElementById("d").innerHTML = "Dist" + this.Position.Distance;*/
     }
-    Update(Context, Rate) {
+    Update(Rate) {
         this.Forces.forEach(Force => {
             this.Velocity.Add(Force.Get());
         });
-        this.Velocity.Add(GlobalForce.Get(this.Position));
+        this.Velocity.Add(GlobalForce.Get(this.Position), Rate);
         this.Position.Add(this.Velocity, Rate);
-        Circle(Context, this.Position.X, this.Position.Y, 2, this.Colour);
+        if (this.Trail) this.Trail.Update(this.Position.X, this.Position.Y);
     };
+    Draw(Context) {
+        if (this.Trail) this.Trail.Draw(Context);        
+        Circle(Context, this.Position.X, this.Position.Y, 4, this.Colour);
+    }
 }
 
 var GlobalForce = {
@@ -104,11 +142,18 @@ var GlobalForce = {
     }
 }
 
-var UniqueID {
+var UniqueID = {
     Prefixes: [],
     Count: [],
     Get: function (prefix) {
-        this.Prefixes.forEach(pf => {
-            
-        });
+        for (var i = 0; i < this.Prefixes.length; i++) {
+            if (prefix == this.Prefixes[i]) {
+                this.Count[i]++;
+                return prefix + (this.Count[i] - 1);
+            }
+        }
+        this.Prefixes.push(prefix);
+        this.Count.push(1);
+        return prefix + 0;
+    }
 }

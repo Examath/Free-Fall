@@ -16,18 +16,19 @@
     <script src="SpaceSim/Tool.js"></script>
     <script src="SpaceSim/SpaceSim.js"></script>
     <script>
-canvas = new SpaceSim(Update,1300,750);
+canvas = new SpaceSim(UpdateCan, DrawCan,1300,750);
 {
-    var o = new SpaceObject(0,300,-55,0);
+    var o = new SpaceObject(0,150,-160,0);
     o.Forces.push(new KeyControllerForce());
     canvas.Objects.push(o);
 }
 canvas.Objects.push(new SpaceObject(0,400,-110,0,"#00ff00"));
-function Update() {
+function UpdateCan() {
     canvas.Update();
-    //Orb.Update();
 }
-KeyController.Start();
+function DrawCan() {
+    canvas.Draw(DrawCan);
+}
     </script>
     <!-- <div id="x"></div>
     <div id="y"></div>
@@ -36,8 +37,9 @@ KeyController.Start();
     <div id="a"></div>
     <div id="d"></div>
     <div id=""></div>
-    <div id=""></div>
-    <div id=""></div> -->
+    <div id=""></div>-->
+    <div id="fu"></div>
+    <div id="fd"></div>
 </body>
 
 </html>

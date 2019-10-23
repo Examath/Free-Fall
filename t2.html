@@ -8,16 +8,22 @@
     <title>T2</title>
 </head>
 
-<body onload="KeyController.Start()">
-    <script src="SpaceSim/SpaceSim.js"></script>
+<body>
+  <script src="SpaceSim/Cartesian.js"></script>
+  <script src="SpaceSim/Input.js"></script>
+  <script src="SpaceSim/Renderer.js"></script>
+  <script src="SpaceSim/Tool.js"></script>
+  <script src="SpaceSim/SpaceSim.js"></script>
     <script>
-canvas = new SpaceSim(Update);
+canvas = new SpaceSim(UpdateCan, DrawCan);
 for (let i = 0; i < 30; i++) {
     canvas.Objects.push(new SpaceObject(0,400,-40 - i * 5,0,hslToRgb(i/30,1,0.5)));
 }
-function Update() {
+function UpdateCan() {
     canvas.Update();
-    //Orb.Update();
+}
+function DrawCan() {
+    canvas.Draw(DrawCan);
 }
 function hslToRgb(h, s, l) { //NotMine. (c) mjackson
   var r, g, b;
@@ -54,6 +60,8 @@ function hslToRgb(h, s, l) { //NotMine. (c) mjackson
     <div id=""></div>
     <div id=""></div>
     <div id=""></div> -->
+    <div id="fu"></div>
+    <div id="fd"></div>
 </body>
 
 </html>
