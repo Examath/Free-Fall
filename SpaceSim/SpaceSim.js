@@ -9,7 +9,8 @@
 
 class SpaceSim {
     constructor(updatecall, DrawCall, w = 2600, h = 1500) {
-        this._Rate = 100;
+        this._Rate = 0.01;
+        this.TimeScale = 1;
         this.Root = document.createElement("div");
         this.Root.classList.add("SpaceSimRoot");
         this.Canvas = document.createElement("canvas");
@@ -22,7 +23,7 @@ class SpaceSim {
             Root: document.createElement("div"),
             Toolbar: {
                 Root: document.createElement("div"),
-                Tools: [new Tool("Select", 0, true), new Tool("Pan", 1), new Tool("Zoom", 2)],
+                Tools: [new Tool("Select", 0, BasicToolPackage.select, true), new Tool("Pan", 1, BasicToolPackage.pan), new Tool("Zoom", 2, BasicToolPackage.zoom)],
                 SelectedTool: 0,
                 Start: function () {
                     this.Root.classList.add("UIToolBar");
@@ -50,6 +51,9 @@ class SpaceSim {
         this.Renderer = {
             X: 0,
             Y: 0,
+            TempX: 0,
+            TempY: 0,
+            HoldTemp: false,
             Z: 1
         }
 
@@ -59,7 +63,7 @@ class SpaceSim {
 
         this.Objects = [];
         this.UpdateCall = updatecall;
-        this.Interval = setInterval(updatecall, 1000 / this.Rate);
+        this.Interval = setInterval(updatecall, 1000 * this._Rate);
         window.requestAnimationFrame(DrawCall);
     }
     Update() {
@@ -68,8 +72,23 @@ class SpaceSim {
         this.Objects.forEach(element => {
             element.Update(this.Rate);
         });
-        if (MouseInputManager.MouseDown && MouseInputManager.MouseTarget == this.ID) {
-            this.Pan();
+        if (MouseInputManager.MouseDown && MouseInputManager.MouseClickTarget == this.ID) {
+            this.UI.Toolbar.Tools[this.UI.Toolbar.SelectedTool].ApplyToolInput(this, true);
+        }
+        //document.getElementById("fdcc").innerHTML =  MouseInputManager.MousePressedButtons.toString();
+        var ln = this.UI.Toolbar.Tools.length;
+        if (MouseInputManager.MouseMoveTarget == this.ID) {
+            for (let i = 0; i < ln; i++) {
+                if (i == this.UI.Toolbar.SelectedTool) continue;
+                this.UI.Toolbar.Tools[i].ApplyToolInput(this);
+            }
+        }
+        if (this.Renderer.HoldTemp) this.Renderer.HoldTemp = false;
+        else if (this.Renderer.TempX != 0 || this.Renderer.TempY != 0 ) {            
+            this.Renderer.X += this.Renderer.TempX;
+            this.Renderer.Y += this.Renderer.TempY;
+            this.Renderer.TempX = 0;
+            this.Renderer.TempY = 0;
         }
         document.getElementById("fu").innerHTML = performance.now() - t;
     }
@@ -79,8 +98,9 @@ class SpaceSim {
         this.Context.fillStyle = "#000000";
         this.Context.fillRect(0, 0, this.Canvas.width, this.Canvas.height);
         this.Context.save();
-        this.Context.translate(this.Canvas.width / 2 + this.Renderer.X, this.Canvas.height / 2 + this.Renderer.Y);
-        Circle(this.Context, 0, 0, 10);
+        this.Context.translate(this.Canvas.width / 2 + this.Renderer.X + this.Renderer.TempX, this.Canvas.height / 2 + this.Renderer.Y + this.Renderer.TempY);
+        this.Context.scale(this.Renderer.Z, this.Renderer.Z);
+        Circle(this.Context, 0, 0, 32);
         this.Objects.forEach(element => {
             element.Draw(this.Context);
         });
@@ -88,15 +108,11 @@ class SpaceSim {
         window.requestAnimationFrame(DrawCall); //TODO: improve
         document.getElementById("fd").innerHTML = performance.now() - t;
     }
-    Pan() { 
-        this.Renderer.X += MouseInputManager.MouseDelta.X;
-        this.Renderer.Y += MouseInputManager.MouseDelta.Y;
-    }
     get Rate() {
-        return this._Rate;
+        return this._Rate * this.TimeScale;
     }
-    set Rate(x) {
-        this._Rate = x;
+    set FrameRate(x) {
+        this._Rate = 1/x;
         clearInterval(this.Interval);
         this.Interval = setInterval(this.UpdateCall, 1000 / x);
     }
@@ -108,7 +124,7 @@ class SpaceObject {
         this.Velocity = new Vector(VelocityX, VelocityY);
         this.Forces = [];
         this.Colour = Col;
-        this.Trail = new Trail(Col);
+        //this.Trail = new Trail(Col);
         /*document.getElementById("x").innerHTML = "X" + this.Position.X;
         document.getElementById("y").innerHTML = "Y" + this.Position.Y;
         document.getElementById("vx").innerHTML = "Vx" + this.Velocity.X;
@@ -125,7 +141,7 @@ class SpaceObject {
         if (this.Trail) this.Trail.Update(this.Position.X, this.Position.Y);
     };
     Draw(Context) {
-        if (this.Trail) this.Trail.Draw(Context);        
+        if (this.Trail) this.Trail.Draw(Context);
         Circle(Context, this.Position.X, this.Position.Y, 4, this.Colour);
     }
 }

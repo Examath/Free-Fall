@@ -12,24 +12,45 @@ var KeyboardInputManager = {
 
 var MouseInputManager = {
     MouseDown: false,
-    MouseTarget: "",
-    MouseDelta: {
+    MouseClickTarget: "",
+    MouseMoveTarget: "",
+    MouseClickPosition: {
         X: 0,
         Y: 0,
     },
+    MouseDelta: {
+        X: 0,
+        Y: 0,
+        Wheel: 0,
+    },
+    MousePressedButtons: new Array(5),
     Start: function () {
         window.addEventListener("mousedown", function (e) {
-            MouseInputManager.MouseDown = true;
-            MouseInputManager.MouseTarget = e.target.id;
+            if (e.button == 0) MouseInputManager.MouseDown = true;
+            MouseInputManager.MouseClickTarget = e.target.id;
+            MouseInputManager.MouseClickPosition.X = e.pageX;
+            MouseInputManager.MouseClickPosition.Y = e.pageY;
+            MouseInputManager.MouseDelta.X = 0;
+            MouseInputManager.MouseDelta.Y = 0;
+            //TODO: Stop annoying pan thingy
+            for (let i = 0; i < 5; i++) {
+                MouseInputManager.MousePressedButtons[i] = (e.buttons & 2 ** i) ? true : false;
+            }
         })
         window.addEventListener("mouseup", function (e) {
             MouseInputManager.MouseDown = false;
+            for (let i = 0; i < 5; i++) {
+                MouseInputManager.MousePressedButtons[i] = (e.buttons & 2 ** i) ? true : false;
+            }
         })
         window.addEventListener("mousemove", function (e) {
-            if (MouseInputManager.MouseDown) {
-                MouseInputManager.MouseDelta.X = e.movementX;
-                MouseInputManager.MouseDelta.Y = e.movementY;
-            }
+            MouseInputManager.MouseMoveTarget = e.target.id;
+            MouseInputManager.MouseDelta.X = MouseInputManager.MouseClickPosition.X - e.pageX;
+            MouseInputManager.MouseDelta.Y = MouseInputManager.MouseClickPosition.Y - e.pageY;
+        })
+        window.addEventListener("wheel", function (e) {
+            MouseInputManager.MouseDelta.Wheel += e.deltaY;
+            MouseInputManager.MouseClickTarget = e.target.id;
         })
     }
 }
