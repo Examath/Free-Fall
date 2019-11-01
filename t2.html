@@ -16,8 +16,8 @@
   <script src="SpaceSim/SpaceSim.js"></script>
     <script>
 canvas = new SpaceSim(UpdateCan, DrawCan);
-for (let i = 0; i < 30; i++) {
-    canvas.Objects.push(new SpaceObject(0,400,-40 - i * 5,0,hslToRgb(i/30,1,0.5)));
+for (let i = 0; i < 300; i++) {
+    canvas.Objects.push(new SpaceObject(0,400,-40 - i * 0.3,0,hslToRgb(i/300,1,0.5)));
 }
 function UpdateCan() {
     canvas.Update();
