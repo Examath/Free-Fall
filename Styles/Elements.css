@@ -1,0 +1,113 @@
+/*  
+    Part of:
+	Elements.css Library (c) Paul Cyril 2019. Created 06/11/2019
+	V 2.0A for Free Fall
+    Use with Elements.js (Paul Cyril 2019). Refer to Elements.js 2.0 Original for original version.
+*/
+
+:root {
+    --Background: black;
+    --Primary: darkblue;
+    --Secondary: rgb(0, 205, 212);
+    --Foreground: white;
+}
+
+/* ----- Page format ----- */
+
+html, body {
+    height: 100%;
+}
+
+
+body {
+    font-family: Verdana, Geneva, sans-serif;
+    margin: 0px;
+    background: var(--Background);
+    color: var(--Foreground);
+}
+
+section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+a {    
+    color: var(--Foreground);
+}
+
+h1 {
+    font-size: 2.3rem;
+}
+
+h2 {
+    font-weight: normal;
+    font-size: 1.8em;
+}
+
+img {
+    width: 100%;
+    height: auto;
+}
+
+/* Parrallax, Caption, Animated Title/Subtitle and Referencing removed. For original refer to elements.css original */
+
+/* ----- Navigation Formatting Footer ----- */
+
+nav {
+    height: 32px;
+}
+
+nav > div {
+    width: 100%;
+	position: fixed;
+    top: 0;
+    height: 32px;
+    background: var(--Primary);
+    opacity: 0.8;
+    transition: opacity 0.3s ease-out, height 0.3s ease-out;
+    z-index: 4;
+    display: flex;
+}
+
+nav > div:hover {    
+    opacity: 1;
+    height: 40px;
+}
+
+nav > div > a {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+    height: 40px;
+    box-sizing: border-box;
+    font-size: 18px;
+    text-decoration: none;
+    opacity: 0.9;
+    transition: opacity 0.5s, padding 0.4s ease-out, background 0.2s;
+}
+
+nav > div:hover > a {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+nav > div > a:first-child {    
+    padding-left: 1em;
+}
+
+nav > div > a:hover {
+    opacity: 1;
+    background: var(--Secondary);
+}
+
+nav > div > a.active {
+    opacity: 1;
+}
+
+/* ----- Footer ----- */
+
+footer {
+    padding: 48px 0px;
+}

@@ -134,7 +134,7 @@ class SpaceObject {
     }
     Update(Rate) {
         this.Forces.forEach(Force => {
-            this.Velocity.Add(Force.Get());
+            this.Velocity.Add(Force.Get(), Rate);
         });
         this.Velocity.Add(GlobalForce.Get(this.Position), Rate);
         this.Position.Add(this.Velocity, Rate);
