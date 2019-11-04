@@ -9,6 +9,7 @@
     --Background: black;
     --Primary: darkblue;
     --Secondary: rgb(0, 205, 212);
+    --SecondaryFaintTint: rgba(0, 205, 212, 0.3);
     --Foreground: white;
 }
 
@@ -60,7 +61,8 @@ nav {
 
 nav > div {
     width: 100%;
-	position: fixed;
+    position: fixed;
+    overflow-y: hidden;
     top: 0;
     height: 32px;
     background: var(--Primary);
@@ -76,35 +78,42 @@ nav > div:hover {
 }
 
 nav > div > a {
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-    padding-top: 0.25em;
-    padding-bottom: 0.25em;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
     height: 40px;
     box-sizing: border-box;
     font-size: 18px;
     text-decoration: none;
+    border: 0px solid var(--Secondary);
     opacity: 0.9;
-    transition: opacity 0.5s, padding 0.4s ease-out, background 0.2s;
+    transition: opacity 0.5s, padding 0.4s ease-out, margin 0.4s ease-out, background 0.3s;
 }
 
 nav > div:hover > a {
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
 }
 
 nav > div > a:first-child {    
-    padding-left: 1em;
+    padding-left: 1rem;
+}
+
+nav > div > a.active {
+    opacity: 1;
+    background: var(--SecondaryFaintTint);
 }
 
 nav > div > a:hover {
     opacity: 1;
     background: var(--Secondary);
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    margin-left: -0.25rem;
+    margin-right: -0.25rem;
 }
 
-nav > div > a.active {
-    opacity: 1;
-}
 
 /* ----- Footer ----- */
 

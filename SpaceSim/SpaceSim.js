@@ -3,9 +3,7 @@
 /// <reference path="Renderer.js" />
 /// <reference path="Input.js" />
 
-// $(function () {
-//     import {KeyController, KeyControllerForce} from "SpaceSim\KeyController.mjs";
-// })
+console.log("Loading SpaceSim.js");
 
 class SpaceSim {
     constructor(updatecall, DrawCall, w = 2600, h = 1500) {
@@ -61,21 +59,28 @@ class SpaceSim {
         this.Root.appendChild(this.Canvas);
         this.Root.appendChild(this.UI.Root);
 
+        this.GlobalForce = new GlobalForce();
         this.Objects = [];
         this.UpdateCall = updatecall;
         this.Interval = setInterval(updatecall, 1000 * this._Rate);
         window.requestAnimationFrame(DrawCall);
     }
     Update() {
-        var t = performance.now();
+        //var t = performance.now();
         this.UI.Update();
+        if (this.GlobalForce.Type = 2) {
+            var l = this.Objects.length;
+            for (let i = 0; i < l; i++) {
+                if (this.Objects[i].Mass == 0) continue;
+                this.GlobalForce.Census[i] = this.Objects[i].Position;
+            }
+        }
         this.Objects.forEach(element => {
-            element.Update(this.Rate);
+            element.Update(this.Rate, this.GlobalForce);
         });
         if (MouseInputManager.MouseDown && MouseInputManager.MouseClickTarget == this.ID) {
             this.UI.Toolbar.Tools[this.UI.Toolbar.SelectedTool].ApplyToolInput(this, true);
         }
-        //document.getElementById("fdcc").innerHTML =  MouseInputManager.MousePressedButtons.toString();
         var ln = this.UI.Toolbar.Tools.length;
         if (MouseInputManager.MouseMoveTarget == this.ID) {
             for (let i = 0; i < ln; i++) {
@@ -84,13 +89,13 @@ class SpaceSim {
             }
         }
         if (this.Renderer.HoldTemp) this.Renderer.HoldTemp = false;
-        else if (this.Renderer.TempX != 0 || this.Renderer.TempY != 0 ) {            
+        else if (this.Renderer.TempX != 0 || this.Renderer.TempY != 0) {
             this.Renderer.X += this.Renderer.TempX;
             this.Renderer.Y += this.Renderer.TempY;
             this.Renderer.TempX = 0;
             this.Renderer.TempY = 0;
         }
-        document.getElementById("fu").innerHTML = performance.now() - t;
+        //document.getElementById("fu").innerHTML = performance.now() - t;
     }
     Draw(DrawCall) {
         var t = performance.now();
@@ -100,43 +105,42 @@ class SpaceSim {
         this.Context.save();
         this.Context.translate(this.Canvas.width / 2 + this.Renderer.X + this.Renderer.TempX, this.Canvas.height / 2 + this.Renderer.Y + this.Renderer.TempY);
         this.Context.scale(this.Renderer.Z, this.Renderer.Z);
-        Circle(this.Context, 0, 0, 32);
         this.Objects.forEach(element => {
             element.Draw(this.Context);
         });
         this.Context.restore();
         window.requestAnimationFrame(DrawCall); //TODO: improve
-        document.getElementById("fd").innerHTML = performance.now() - t;
+        //document.getElementById("fd").innerHTML = performance.now() - t;
     }
     get Rate() {
         return this._Rate * this.TimeScale;
     }
     set FrameRate(x) {
-        this._Rate = 1/x;
+        this._Rate = 1 / x;
         clearInterval(this.Interval);
         this.Interval = setInterval(this.UpdateCall, 1000 / x);
+    }
+    AddObject(obj) {
+        obj.ID = this.Objects.length;
+        this.Objects.push(obj);
+        this.GlobalForce.Census.push(obj.Position);
     }
 }
 
 class SpaceObject {
-    constructor(PositionX, PositionY, VelocityX, VelocityY, Col = "#00ffff") {
-        this.Position = new Coordinate(PositionX, PositionY);
+    constructor(PositionX, PositionY, VelocityX, VelocityY, Col = "#00ffff", mass = 0) {
+        this.Position = new Coordinate(PositionX, PositionY, mass);
         this.Velocity = new Vector(VelocityX, VelocityY);
         this.Forces = [];
         this.Colour = Col;
+        this.ID = 0;
         //this.Trail = new Trail(Col);
-        /*document.getElementById("x").innerHTML = "X" + this.Position.X;
-        document.getElementById("y").innerHTML = "Y" + this.Position.Y;
-        document.getElementById("vx").innerHTML = "Vx" + this.Velocity.X;
-        document.getElementById("vy").innerHTML = "Vy" + this.Velocity.Y;
-        document.getElementById("a").innerHTML = "Angle" + this.Position.Angle * (180 / Math.PI);
-        document.getElementById("d").innerHTML = "Dist" + this.Position.Distance;*/
     }
-    Update(Rate) {
+    Update(Rate, GlobalForce) {
         this.Forces.forEach(Force => {
             this.Velocity.Add(Force.Get(), Rate);
         });
-        this.Velocity.Add(GlobalForce.Get(this.Position), Rate);
+        this.Velocity.Add(GlobalForce.Get(this.Position, this.ID), Rate);
         this.Position.Add(this.Velocity, Rate);
         if (this.Trail) this.Trail.Update(this.Position.X, this.Position.Y);
     };
@@ -146,7 +150,7 @@ class SpaceObject {
     }
 }
 
-var GlobalForce = {
+var GlobalForcet = {
     Gravity: 9.8,
     CentralMass: 5000,
     Get: function (position) {
@@ -155,7 +159,10 @@ var GlobalForce = {
         var y = a * position.RY * -1;
         var force = new Vector(x, y);
         return force;
-    }
+    },
+    Flat: 0,
+    Circular: 1,
+    NBody: 2
 }
 
 var UniqueID = {

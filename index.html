@@ -11,6 +11,26 @@
 </head>
 <body>
     <nav></nav>
+    <script src="SpaceSim/Cartesian.js"></script>
+    <script src="SpaceSim/Input.js"></script>
+    <script src="SpaceSim/Renderer.js"></script>
+    <script src="SpaceSim/Tool.js"></script>
+    <script src="SpaceSim/SpaceSim.js"></script>
+    <script>
+canvas = new SpaceSim(UpdateCan, DrawCan, $(window).height(),750);
+var index = 0;
+function AddParticle() { 
+    if(canvas.Objects.length < 20)canvas.AddObject(new SpaceObject(400 - Math.random() * 800, 400 - Math.random() * 800, 0, 0, "hsl(" + (index * 5) + ",100%,50%)", 100));
+    index++;
+}
+setInterval(AddParticle,1000);
+function UpdateCan() {
+    canvas.Update();
+}
+function DrawCan() {
+    canvas.Draw(DrawCan);
+}
+    </script>
     Yaaaaaaa
     <a href="orbiter.html">What i work on for so long</a>
     cjdsj<br/>
