@@ -21,6 +21,8 @@ canvas = new SpaceSim(UpdateCan, DrawCan, 1300, $(window).height()-100);
 canvas.AddObject(new SpaceObject(-1,1,0,1,"green",2000));
 canvas.AddObject(new SpaceObject(250,1,0,-20,"lightblue",250));
 canvas.AddObject(new SpaceObject(300,1,0,-40,"blue",62));
+canvas.AddObject(new SpaceObject(100,1,0,-40,"yellow"));
+canvas.Objects[3].Forces.push(new KeyControllerForce());
 function UpdateCan() {
     canvas.Update();
 }
