@@ -7,14 +7,14 @@
 */
 
 $(function () {
-    console.log("Loading Elements.js (c) Paul Cyril 2019. V2.0A for Free Fall"); 
-    
-    $("nav").load("Assets/Nav.html", findActive);  
-    $("nav").attr("id","nav");
+    console.log("Loading Elements.js (c) Paul Cyril 2019. V2.0A for Free Fall");
+
+    $("nav").load("Assets/Nav.html", findActive);
+    $("nav").attr("id", "nav");
     $("footer").load("Assets/Footer.html");
 });
 
 function findActive() {
     var active = document.getElementById($("title").text().substr(0, 1));
-    if(active != null) active.classList.add("active");
+    if (active != null) active.classList.add("active");
 }
