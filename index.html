@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,75 +10,37 @@
     <script src="Scripts/Elements.js"></script>
     <title>Home</title>
 </head>
+
 <body>
     <nav></nav>
-    <script src="SpaceSimScr/Cartesian.js"></script>
-    <script src="SpaceSimScr/Input.js"></script>
-    <script src="SpaceSimScr/Renderer.js"></script>
-    <script src="SpaceSimScr/Tool.js"></script>
-    <script src="SpaceSimScr/SpaceSim.js"></script>
-    <script>
-canvas = new SpaceSim(UpdateCan, DrawCan, $(window).height(),750);
-var index = 0;
-function AddParticle() { 
-    if(canvas.Objects.length < 20)canvas.AddObject(new SpaceObject(400 - Math.random() * 800, 400 - Math.random() * 800, 0, 0, "hsl(" + (index * 5) + ",100%,50%)", 100));
-    index++;
-}
-setInterval(AddParticle,1000);
-function UpdateCan() {
-    canvas.Update();
-}
-function DrawCan() {
-    canvas.Draw(DrawCan);
-}
-    </script>
-    Yaaaaaaa
-    <a href="orbiter.html">What i work on for so long</a>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
-    cjdsj<br/>
+    <div style="position: fixed; z-index: -1;">
+        <script src="SpaceSimScr/Cartesian.js"></script>
+        <script src="SpaceSimScr/Input.js"></script>
+        <script src="SpaceSimScr/Renderer.js"></script>
+        <script src="SpaceSimScr/Tool.js"></script>
+        <script src="SpaceSimScr/SpaceSim.js"></script>
+        <script>
+            canvas = new SpaceSim(UpdateCan, DrawCan, $(window).width(), $(window).height());
+            var index = 0;
+            function AddParticle() {
+                if (canvas.Objects.length < 20) canvas.AddObject(new SpaceObject(400 - Math.random() * 800, 400 - Math.random() * 800, 0, 0, "hsl(" + (index * 5) + ",100%,50%)", 100));
+                index++;
+            }
+            setInterval(AddParticle, 1000);
+            function UpdateCan() {
+                canvas.Update();
+            }
+            function DrawCan() {
+                canvas.Draw(DrawCan);
+            }
+        </script>
+    </div>
+    <div class="Title InsertOver" style="height: 50%;">Learn by Interacting</div>
+    <section>
+        Yaaaaaaa
+        <a href="orbiter.html">What i work on for so long</a>
+    </section>
     <footer></footer>
 </body>
+
 </html>

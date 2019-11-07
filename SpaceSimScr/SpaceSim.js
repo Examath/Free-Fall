@@ -54,8 +54,9 @@ class SpaceSim {
             HoldTemp: false,
             Z: 1
         }
+        var ScriptPos = document.scripts[document.scripts.length - 1];
 
-        document.body.insertBefore(this.Root, document.body.childNodes[0]);
+        ScriptPos.parentElement.insertBefore(this.Root, ScriptPos);
         this.Root.appendChild(this.Canvas);
         this.Root.appendChild(this.UI.Root);
 

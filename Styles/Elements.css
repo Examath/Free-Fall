@@ -19,7 +19,6 @@ html, body {
     height: 100%;
 }
 
-
 body {
     font-family: Verdana, Geneva, sans-serif;
     margin: 0px;
@@ -33,7 +32,7 @@ section {
     padding: 0 16px;
 }
 
-a {    
+a {
     color: var(--Foreground);
 }
 
@@ -51,7 +50,20 @@ img {
     height: auto;
 }
 
-/* Parrallax, Caption, Animated Title/Subtitle and Referencing removed. For original refer to elements.css original */
+/* Parrallax, Caption, Legacy (SouthAusMarine) Animated Title/Subtitle and Referencing removed. For original refer to elements.css original */
+
+div.Title.InsertOver {
+    font-size: 3em;
+    margin: 10vw;
+    width: 50%;
+    transition: opacity 0.5s, margin, 1.2s ease-in-out;
+}
+
+div.Title.InsertOver:hover {
+    opacity: 0.2;
+    margin-left: 2vw;
+    margin-right: 18vw;
+}
 
 /* ----- Navigation Formatting Footer ----- */
 
@@ -59,7 +71,7 @@ nav {
     height: 32px;
 }
 
-nav > div {
+nav>div {
     width: 100%;
     position: fixed;
     overflow-y: hidden;
@@ -72,12 +84,12 @@ nav > div {
     display: flex;
 }
 
-nav > div:hover {    
+nav>div:hover {
     opacity: 1;
     height: 40px;
 }
 
-nav > div > a {
+nav>div>a {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     padding-top: 0.25rem;
@@ -91,21 +103,21 @@ nav > div > a {
     transition: opacity 0.5s, padding 0.4s ease-out, margin 0.4s ease-out, background 0.3s;
 }
 
-nav > div:hover > a {
+nav>div:hover>a {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
 }
 
-nav > div > a:first-child {    
+nav>div>a:first-child {
     padding-left: 1rem;
 }
 
-nav > div > a.active {
+nav>div>a.active {
     opacity: 1;
     background: var(--SecondaryFaintTint);
 }
 
-nav > div > a:hover {
+nav>div>a:hover {
     opacity: 1;
     background: var(--Secondary);
     padding-left: 0.75rem;
@@ -113,7 +125,6 @@ nav > div > a:hover {
     margin-left: -0.25rem;
     margin-right: -0.25rem;
 }
-
 
 /* ----- Footer ----- */
 
