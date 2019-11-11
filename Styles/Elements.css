@@ -8,8 +8,9 @@
 :root {
     --Background: black;
     --Primary: darkblue;
+    --PrimaryTint: rgba(0, 0, 139, 0.3);
     --Secondary: rgb(0, 205, 212);
-    --SecondaryFaintTint: rgba(0, 205, 212, 0.3);
+    --SecondaryTint: rgba(0, 205, 212, 0.2);
     --Foreground: white;
 }
 
@@ -21,7 +22,8 @@ html, body {
 
 body {
     font-family: Verdana, Geneva, sans-serif;
-    margin: 0px;
+    margin: 0;
+    padding-top: 2em;
     background: var(--Background);
     color: var(--Foreground);
 }
@@ -30,6 +32,11 @@ section {
     max-width: 800px;
     margin: 0 auto;
     padding: 0 16px;
+}
+
+article {
+    background: var(--PrimaryTint);
+    padding: 1em;
 }
 
 a {
@@ -53,7 +60,7 @@ img {
 /* Parrallax, Caption, Legacy (SouthAusMarine) Animated Title/Subtitle and Referencing removed. For original refer to elements.css original */
 
 div.Title.InsertOver {
-    font-size: 3em;
+    font-size: calc(2em + 4vw);
     margin: 10vw;
     width: 50%;
     transition: opacity 0.5s, margin, 1.2s ease-in-out;
@@ -68,57 +75,86 @@ div.Title.InsertOver:hover {
 /* ----- Navigation Formatting Footer ----- */
 
 nav {
-    height: 32px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    height: auto;
+    opacity: 0.8;
+    transition: opacity 0.3s ease-out;
+    z-index: 4;
+}
+
+nav:hover {
+    opacity: 1;
 }
 
 nav>div {
     width: 100%;
-    position: fixed;
-    overflow-y: hidden;
-    top: 0;
-    height: 32px;
+    height: 2em;
     background: var(--Primary);
-    opacity: 0.8;
-    transition: opacity 0.3s ease-out, height 0.3s ease-out;
-    z-index: 4;
     display: flex;
+    transition: height 0.5s ease-out;
 }
 
 nav>div:hover {
-    opacity: 1;
-    height: 40px;
+    height: 2.5em;
 }
 
-nav>div>a {
+nav>div div {
+    display: flex;
+    flex-direction: column;
+}
+
+nav>div div>a, a.NavStyle {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-    height: 40px;
-    box-sizing: border-box;
+    background: var(--Primary);
+    opacity: 0;
     font-size: 18px;
+    height: 100%;
+    display: block;
+    box-sizing: border-box;
     text-decoration: none;
-    border: 0px solid var(--Secondary);
-    opacity: 0.9;
     transition: opacity 0.5s, padding 0.4s ease-out, margin 0.4s ease-out, background 0.3s;
 }
 
-nav>div:hover>a {
+nav>div div>a:first-child, a.NavStyle, nav>div div.active>a{
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    background: none;
+    opacity: 0.9;
+}
+
+a.NavStyle {
+    opacity: 0.9;
+    height: 32px;
+    display: inline-block;
+    background: var(--Primary);
+}
+
+nav>div:hover>div>a {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
 }
 
-nav>div>a:first-child {
+nav>div>div:first-child>a {
     padding-left: 1rem;
 }
 
-nav>div>a.active {
-    opacity: 1;
-    background: var(--SecondaryFaintTint);
+nav>div div.active {
+    flex-direction: row;
 }
 
-nav>div>a:hover {
+nav>div div.active, nav>div div>a.active {
     opacity: 1;
+    background: var(--SecondaryTint);
+}
+
+nav>div>div:hover>a {
+    opacity: 1;
+}
+
+nav>div>div>a:hover, a.NavStyle:hover {
     background: var(--Secondary);
     padding-left: 0.75rem;
     padding-right: 0.75rem;

@@ -1,0 +1,29 @@
+/*  
+	TextSlideshow.css (c) Paul Cyril 2019. Created 07/11/2019
+	V 2.0A for Free Fall
+    Requires TextSlideshow.js (Paul Cyril 2019).
+*/
+@keyframes show {
+    to {
+        opacity: 1;
+        margin: 1em 0 1em;
+    }
+}
+
+@keyframes hide {
+    to {
+        opacity: 0;
+        margin: 0em 0 2em;
+    }
+}
+
+.TextSlideshow {
+    min-height: 3em;
+    font-size: 2em;
+}
+
+.TextSlideshow>p {
+    opacity: 0;
+    margin: 0 0 2em;
+    position: absolute;
+}
