@@ -20,12 +20,18 @@
         <script src="SpaceSimScr/Input.js"></script>
         <script src="SpaceSimScr/Renderer.js"></script>
         <script src="SpaceSimScr/Tool.js"></script>
+        <script src="SpaceSimScr/SpaceObject.js"></script>
         <script src="SpaceSimScr/SpaceSim.js"></script>
         <script>
-            canvas = new SpaceSim(UpdateCan, DrawCan, $(window).width(), $(window).height());
+            canvas = new SpaceSim(UpdateCan, DrawCan, {
+                width: $(window).width(),
+                height: $(window).height(),
+                forcetype: 2,
+                ui: false
+            });
             var index = 0;
             function AddParticle() {
-                if (canvas.Objects.length < 20) canvas.AddObject(new SpaceObject(400 - Math.random() * 800, 400 - Math.random() * 800, 0, 0, "hsl(" + (index * 5) + ",100%,50%)", 100));
+                if (canvas.Objects.length < 20) canvas.AddObject(new CircularSpaceObject(400 - Math.random() * 800, 400 - Math.random() * 800, 0, 0, 100, 4, "hsl(" + (index * 5) + ",100%,50%)"));
                 index++;
             }
             setInterval(AddParticle, 1000);
@@ -58,7 +64,7 @@
             simulator that can.
         </p>
         <a href="learn/index.html" class="NavStyle">Start now</a>
-        <br/>
+        <br />
         <br>
         <a href="orbiter.html">What i work on for so long</a>
     </section>

@@ -18,10 +18,11 @@ $(function () {
 function findActive() {
     var dir = $("head").data("navdir").split("-");
     var rcdir = "#n";
-    // var active = document.getElementById($("title").text().substr(0, 1));
-    // if (active != null) active.classList.add("active");
     for (let i = 0; i < dir.length; i++) {
         rcdir += "-" + dir[i];
         $(rcdir).addClass("active");
     }
+    if (dir[1] == "X") {
+        $("#n-L").append('<div class="active"><a class="active small">' + "Gravity from earth to space" + '<a>&#60;</a>' + "4/5" + '<a>&#62;</a></div>')
+    };
 }

@@ -2,74 +2,84 @@
 /// <reference path="Cartesian.js" />
 /// <reference path="Renderer.js" />
 /// <reference path="Input.js" />
+/// <reference path="CircularSpaceObject.js" />
 
 console.log("Loading SpaceSim.js");
 
 class SpaceSim {
-    constructor(updatecall, DrawCall, w = 2600, h = 1500) {
-        this._Rate = 0.01;
-        this.TimeScale = 1;
+    constructor(updatecall, DrawCall, properties = {}) {
+        this._Rate = getprop("rate", 0.01);
+        this.TimeScale = getprop("timescale", 1);
         this.Root = document.createElement("div");
         this.Root.classList.add("SpaceSimRoot");
         this.Canvas = document.createElement("canvas");
         this.ID = UniqueID.Get("SpaceSimCanvas");
         this.Canvas.id = this.ID;
-        this.Canvas.width = w;
-        this.Canvas.height = h;
+        this.Canvas.width = getprop("width", 2600);
+        this.Canvas.height = getprop("height", 1500);
         this.Context = this.Canvas.getContext("2d", { alpha: false });
-        this.UI = {
-            Root: document.createElement("div"),
-            Toolbar: {
+
+        var ScriptPos = document.scripts[document.scripts.length - 1];
+
+        ScriptPos.parentElement.insertBefore(this.Root, ScriptPos);
+        this.Root.appendChild(this.Canvas);
+        this.UIEnabled = getprop("ui", true);
+        if (this.UIEnabled) {
+            this.UI = {
                 Root: document.createElement("div"),
-                Tools: [new Tool("Select", 0, BasicToolPackage.select, true), new Tool("Pan", 1, BasicToolPackage.pan), new Tool("Zoom", 2, BasicToolPackage.zoom)],
-                SelectedTool: 0,
+                Toolbar: {
+                    Root: document.createElement("div"),
+                    Tools: [new Tool("Select", 0, BasicToolPackage.select, true), new Tool("Pan", 1, BasicToolPackage.pan), new Tool("Zoom", 2, BasicToolPackage.zoom)],
+                    SelectedTool: 0,
+                    Start: function () {
+                        this.Root.classList.add("UIToolBar");
+                        this.Tools.forEach(tool => {
+                            this.Root.appendChild(tool.Root);
+                        });
+                    },
+                    Update: function () {
+                        if (Tool.SelectionChangedFlag && this.Tools[Tool.SelectedRefrenceIndex].Selected) {
+                            this.SelectedTool = Tool.SelectedRefrenceIndex;
+                            Tool.SelectionChangedFlag = false;
+                        }
+                    }
+                },
                 Start: function () {
-                    this.Root.classList.add("UIToolBar");
-                    this.Tools.forEach(tool => {
-                        this.Root.appendChild(tool.Root);
-                    });
+                    this.Root.classList.add("SpaceSimUIRoot");
+                    this.Toolbar.Start();
+                    this.Root.appendChild(this.Toolbar.Root);
                 },
                 Update: function () {
-                    if (Tool.SelectionChangedFlag && this.Tools[Tool.SelectedRefrenceIndex].Selected) {
-                        this.SelectedTool = Tool.SelectedRefrenceIndex;
-                        Tool.SelectionChangedFlag = false;
-                    }
+                    this.Toolbar.Update();
                 }
-            },
-            Start: function () {
-                this.Root.classList.add("SpaceSimUIRoot");
-                this.Toolbar.Start();
-                this.Root.appendChild(this.Toolbar.Root);
-            },
-            Update: function () {
-                this.Toolbar.Update();
             }
+            this.UI.Start();
+            this.Root.appendChild(this.UI.Root);
         }
-        this.UI.Start();
+
         this.Renderer = {
             X: 0,
             Y: 0,
             TempX: 0,
             TempY: 0,
             HoldTemp: false,
-            Z: 1
+            Z: getprop("scale", 1)
         }
-        var ScriptPos = document.scripts[document.scripts.length - 1];
 
-        ScriptPos.parentElement.insertBefore(this.Root, ScriptPos);
-        this.Root.appendChild(this.Canvas);
-        this.Root.appendChild(this.UI.Root);
-
-        this.GlobalForce = new GlobalForce();
+        this.GlobalForce = new GlobalForce(getprop("forcetype", 1));
         this.Objects = [];
         this.UpdateCall = updatecall;
         this.Interval = setInterval(updatecall, 1000 * this._Rate);
         window.requestAnimationFrame(DrawCall);
+
+        function getprop(params, def) {
+            if (properties[params] != null) return properties[params];
+            else return def;
+        }
     }
     Update() {
         //var t = performance.now();
-        this.UI.Update();
-        if (this.GlobalForce.Type = 2) {
+        if (this.GlobalForce.Type == 2) {
             var l = this.Objects.length;
             for (let i = 0; i < l; i++) {
                 if (this.Objects[i].Mass == 0) continue;
@@ -79,22 +89,26 @@ class SpaceSim {
         this.Objects.forEach(element => {
             element.Update(this.Rate, this.GlobalForce);
         });
-        if (MouseInputManager.MouseDown && MouseInputManager.MouseClickTarget == this.ID) {
-            this.UI.Toolbar.Tools[this.UI.Toolbar.SelectedTool].ApplyToolInput(this, true);
-        }
-        var ln = this.UI.Toolbar.Tools.length;
-        if (MouseInputManager.MouseMoveTarget == this.ID) {
-            for (let i = 0; i < ln; i++) {
-                if (i == this.UI.Toolbar.SelectedTool) continue;
-                this.UI.Toolbar.Tools[i].ApplyToolInput(this);
+        if (this.UIEnabled) {
+            this.UI.Update();
+
+            if (MouseInputManager.MouseDown && MouseInputManager.MouseClickTarget == this.ID) {
+                this.UI.Toolbar.Tools[this.UI.Toolbar.SelectedTool].ApplyToolInput(this, true);
             }
-        }
-        if (this.Renderer.HoldTemp) this.Renderer.HoldTemp = false;
-        else if (this.Renderer.TempX != 0 || this.Renderer.TempY != 0) {
-            this.Renderer.X += this.Renderer.TempX;
-            this.Renderer.Y += this.Renderer.TempY;
-            this.Renderer.TempX = 0;
-            this.Renderer.TempY = 0;
+            var ln = this.UI.Toolbar.Tools.length;
+            if (MouseInputManager.MouseMoveTarget == this.ID) {
+                for (let i = 0; i < ln; i++) {
+                    if (i == this.UI.Toolbar.SelectedTool) continue;
+                    this.UI.Toolbar.Tools[i].ApplyToolInput(this);
+                }
+            }
+            if (this.Renderer.HoldTemp) this.Renderer.HoldTemp = false;
+            else if (this.Renderer.TempX != 0 || this.Renderer.TempY != 0) {
+                this.Renderer.X += this.Renderer.TempX;
+                this.Renderer.Y += this.Renderer.TempY;
+                this.Renderer.TempX = 0;
+                this.Renderer.TempY = 0;
+            }
         }
         //document.getElementById("fu").innerHTML = performance.now() - t;
     }
@@ -125,29 +139,6 @@ class SpaceSim {
         obj.ID = this.Objects.length;
         this.Objects.push(obj);
         this.GlobalForce.Census.push(obj.Position);
-    }
-}
-
-class SpaceObject {
-    constructor(PositionX, PositionY, VelocityX, VelocityY, Col = "#00ffff", mass = 0) {
-        this.Position = new Coordinate(PositionX, PositionY, mass);
-        this.Velocity = new Vector(VelocityX, VelocityY);
-        this.Forces = [];
-        this.Colour = Col;
-        this.ID = 0;
-        //this.Trail = new Trail(Col);
-    }
-    Update(Rate, GlobalForce) {
-        this.Forces.forEach(Force => {
-            this.Velocity.Add(Force.Get(), Rate);
-        });
-        this.Velocity.Add(GlobalForce.Get(this.Position, this.ID), Rate);
-        this.Position.Add(this.Velocity, Rate);
-        if (this.Trail) this.Trail.Update(this.Position.X, this.Position.Y);
-    };
-    Draw(Context) {
-        if (this.Trail) this.Trail.Draw(Context);
-        Circle(Context, this.Position.X, this.Position.Y, 4, this.Colour);
     }
 }
 

@@ -32,8 +32,8 @@ class Vector {
     }
     Add(V, Rate) {
         if (!V) return;
-        this.X += V.X * 100 * Rate;
-        this.Y += V.Y * 100 * Rate;
+        this.X += V.X * Rate;
+        this.Y += V.Y * Rate;
     };
 }
 

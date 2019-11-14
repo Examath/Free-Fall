@@ -132,7 +132,7 @@ a.NavStyle {
     background: var(--Primary);
 }
 
-nav>div:hover>div>a {
+nav>div:hover div>a {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
 }
@@ -154,7 +154,7 @@ nav>div>div:hover>a {
     opacity: 1;
 }
 
-nav>div>div>a:hover, a.NavStyle:hover {
+nav>div div>a:hover, a.NavStyle:hover {
     background: var(--Secondary);
     padding-left: 0.75rem;
     padding-right: 0.75rem;

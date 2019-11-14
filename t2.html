@@ -13,11 +13,12 @@
   <script src="SpaceSimScr/Input.js"></script>
   <script src="SpaceSimScr/Renderer.js"></script>
   <script src="SpaceSimScr/Tool.js"></script>
+  <script src="SpaceSimScr/SpaceObject.js"></script>
   <script src="SpaceSimScr/SpaceSim.js"></script>
     <script>
 canvas = new SpaceSim(UpdateCan, DrawCan);
 for (let i = 0; i < 300; i++) {
-    canvas.Objects.push(new SpaceObject(0,400,-40 - i * 0.3,0,hslToRgb(i/300,1,0.5)));
+    canvas.Objects.push(new CircularSpaceObject(0,400,-40 - i * 0.3,0,0,4,hslToRgb(i/300,1,0.5)));
 }
 function UpdateCan() {
     canvas.Update();

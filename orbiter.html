@@ -14,21 +14,24 @@
     <script src="SpaceSimScr/Input.js"></script>
     <script src="SpaceSimScr/Renderer.js"></script>
     <script src="SpaceSimScr/Tool.js"></script>
+    <script src="SpaceSimScr/SpaceObject.js"></script>
     <script src="SpaceSimScr/SpaceSim.js"></script>
     <script>
-canvas = new SpaceSim(UpdateCan, DrawCan,1300,750);
-{
-    var o = new SpaceObject(0,150,-160,0);
-    o.Forces.push(new KeyControllerForce());
-    canvas.Objects.push(o);
-}
-canvas.Objects.push(new SpaceObject(0,400,-110,0,"#00ff00"));
-function UpdateCan() {
-    canvas.Update();
-}
-function DrawCan() {
-    canvas.Draw(DrawCan);
-}
+
+        canvas = new SpaceSim(UpdateCan, DrawCan, { width: 1300, height: 750 });
+        {
+            var o = new CircularSpaceObject(0, 150, -160, 0, 4, 4, "#00ffff");
+            o.Forces.push(new KeyControllerForce());
+            canvas.Objects.push(o);
+        }
+        canvas.Objects.push(new CircularSpaceObject(0, 400, -110, 0, 0, 8, "#00ff00"));
+        canvas.Objects.push(new StaticCircularSpaceObject(0, 0, 0, 20));
+        function UpdateCan() {
+            canvas.Update();
+        }
+        function DrawCan() {
+            canvas.Draw(DrawCan);
+        }
     </script>
     <!-- <div id="x"></div>
     <div id="y"></div>
