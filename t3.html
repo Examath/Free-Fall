@@ -20,9 +20,9 @@
     <script src="SpaceSimScr/SpaceSim.js"></script>
     <script>
 canvas = new SpaceSim(UpdateCan, DrawCan, {width: $(window).width()-100,height: $(window).height()-100, forcetype: 2});
-canvas.AddObject(new CircularSpaceObject(-1,1,0,1,2000,16,"green"));
-canvas.AddObject(new CircularSpaceObject(250,1,0,-20,250,8,"lightblue"));
-canvas.AddObject(new CircularSpaceObject(300,1,0,-40,62,4,"blue"));
+canvas.AddObject(new CircularSpaceObject(-1,1,0,1,200000,16,"green"));
+canvas.AddObject(new CircularSpaceObject(250,1,0,-20,25000,8,"lightblue"));
+canvas.AddObject(new CircularSpaceObject(300,1,0,-40,6200,4,"blue"));
 canvas.AddObject(new CircularSpaceObject(100,1,0,-40,0,2,"yellow"));
 canvas.Objects[3].Forces.push(new KeyControllerForce());
 function UpdateCan() {

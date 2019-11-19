@@ -38,7 +38,7 @@ class Vector {
 }
 
 class GlobalForce {
-    constructor(type = 1, gravity = 9.8, centralMass = 5000) {
+    constructor(type = 1, gravity = 9.8, centralMass = 500000) {
         this.Type = type;
         this.Gravity = gravity;
         this.CentralMass = centralMass;
