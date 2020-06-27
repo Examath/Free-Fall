@@ -85,13 +85,13 @@ class GlobalForce {
     GetFC(physic, id) {
         switch (this.Type) {
             case 0:
-                return new Vector(0, -this.Gravity);
+                return { Collide: false, Force: new Vector(0, -this.Gravity)};
             case 1:
                 var a = this.Gravity * this.CentralMass / physic.Influence;
                 var x = a * physic.RX * -1;
                 var y = a * physic.RY * -1;
                 var force = new Vector(x, y);
-                return force;
+                return { Collide: false, Force: force};
             case 2:
                 var x = 0;
                 var y = 0;

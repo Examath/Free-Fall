@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,8 +11,22 @@
     <script src="Scripts/Elements.js"></script>
     <title>Document</title>
 </head>
+
 <body>
     <nav></nav>
+    <button onclick="Run()">Run</button>
+    <textarea id="inp" rows="10" cols="100">
+ID: "can",
+Canvas: {
+    width: $(window).width() - 100,
+    height: $(window).height() - 300
+},
+UIEnabled: true,
+Objects: [
+    new CircularSpaceObject(50, 50, 10, -10, 80000, "white"),
+    new CircularSpaceObject(-50, -50, -10, 10, 75000, "grey")
+]
+    </textarea>
     <script src="SpaceSimScr/Cartesian.js"></script>
     <script src="SpaceSimScr/Input.js"></script>
     <script src="SpaceSimScr/Renderer.js"></script>
@@ -19,34 +34,22 @@
     <script src="SpaceSimScr/SpaceObject.js"></script>
     <script src="SpaceSimScr/SpaceSim.js"></script>
     <script>
-        canvas = new FreeFall(UpdateCan, DrawCan, {
-            width: $(window).width() - 100,
-            height: $(window).height() - 100,
-            forcetype: 2,
-            ui: true
-        });
-        var index = 0;
-        var r = 800;
-        var v = 0;
-        function AddParticle() {
-            if (canvas.Objects.length < 60) canvas.AddObject(new CircularSpaceObject(
-                r - Math.random() * r * 2,
-                400 - Math.random() * r * 2,
-                v - Math.random() * v * 2,
-                v - Math.random() * v * 2,
-                10000,
-                "hsl(" + (index * 2) + ",100%,50%)"));
-            index++;
-            v++;
-        }
-        setInterval(AddParticle, 1000);
-        function UpdateCan() {
-            canvas.Update();
-        }
-        function DrawCan() {
-            canvas.Draw(DrawCan);
+        function Run() {
+            $("#can").remove();        
+            var t = "var prop = {" + document.getElementById("inp").value + "};";
+            console.log(t);
+            eval(t);
+            console.log(prop);
+            canvas = new FreeFall(UpdateCan, DrawCan, prop);
+            function UpdateCan() {
+                canvas.Update();
+            }
+            function DrawCan() {
+                canvas.Draw(DrawCan);
+            }
         }
     </script>
     <footer></footer>
 </body>
+
 </html>
