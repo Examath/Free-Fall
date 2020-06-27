@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <base href="../">
+    <link rel="stylesheet" type="text/css" href="Styles/SpaceSimUI.css">
+    <link href="Assets/Logo.png" rel="shortcut icon" type="image/png">
+    <title>Orbiter</title>
+</head>
+
+<body>
+    <script src="SpaceSimScr/Cartesian.js"></script>
+    <script src="SpaceSimScr/Input.js"></script>
+    <script src="SpaceSimScr/Renderer.js"></script>
+    <script src="SpaceSimScr/Tool.js"></script>
+    <script src="SpaceSimScr/SpaceObject.js"></script>
+    <script src="SpaceSimScr/SpaceSim.js"></script>
+    <script>
+
+        canvas = new SpaceSim(UpdateCan, DrawCan, { width: 1300, height: 750 });
+        {
+            var o = new CircularSpaceObject(0, 150, -160, 0, 4, 4, "#00ffff");
+            o.Forces.push(new KeyControllerForce());
+            canvas.Objects.push(o);
+        }
+        canvas.Objects.push(new CircularSpaceObject(0, 400, -110, 0, 0, 8, "#00ff00"));
+        canvas.Objects.push(new StaticCircularSpaceObject(0, 0, 0, 20));
+        function UpdateCan() {
+            canvas.Update();
+        }
+        function DrawCan() {
+            canvas.Draw(DrawCan);
+        }
+    </script>
+    <!-- <div id="x"></div>
+    <div id="y"></div>
+    <div id="vx"></div>
+    <div id="vy"></div>
+    <div id="a"></div>
+    <div id="d"></div>
+    <div id=""></div>
+    <div id=""></div>-->
+    <div id="fu"></div>
+    <div id="fd"></div>
+    <div id="fdcc"></div>
+</body>
+
+</html>

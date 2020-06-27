@@ -32,7 +32,7 @@
             });
             var index = 0;
             function AddParticle() {
-                if (canvas.Objects.length < 20) canvas.AddObject(new CircularSpaceObject(400 - Math.random() * 800, 400 - Math.random() * 800, 0, 0, 10000, 4, "hsl(" + (index * 5) + ",100%,50%)"));
+                if (canvas.Objects.length < 20) canvas.AddObject(new CircularSpaceObject(400 - Math.random() * 800, 400 - Math.random() * 800, 0, 0, 10000, "hsl(" + (index * 2) + ",100%,50%)"));
                 index++;
             }
             setInterval(AddParticle, 1000);

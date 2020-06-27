@@ -79,11 +79,26 @@ class SpaceSim {
     }
     Update() {
         //var t = performance.now();
+        var idreset = false;
         if (this.GlobalForce.Type == 2) {
             var l = this.Objects.length;
             for (let i = 0; i < l; i++) {
-                if (this.Objects[i].Mass == 0) continue;
-                this.GlobalForce.Census[i] = this.Objects[i].Position;
+                try {
+                    
+                if (this.Objects[i].Delete) {                   
+                    this.Objects.splice(i, 1);
+                    this.GlobalForce.Census.splice(i, 1);
+                    idreset = true;
+                    i--;
+                    l--;
+                    continue;
+                }
+                } catch (error) {
+                    console.log(i+"deler",this.Objects);
+                }
+                if (idreset) this.Objects[i].ID = i;
+                if (this.Objects[i].Physic.Mass == 0) continue;
+                this.GlobalForce.Census[i] = this.Objects[i].Physic;
             }
         }
         this.Objects.forEach(element => {
@@ -138,7 +153,7 @@ class SpaceSim {
     AddObject(obj) {
         obj.ID = this.Objects.length;
         this.Objects.push(obj);
-        this.GlobalForce.Census.push(obj.Position);
+        this.GlobalForce.Census.push(obj.Physic);
     }
 }
 
