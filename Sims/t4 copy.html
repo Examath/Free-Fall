@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="../">
+    <link rel="stylesheet" type="text/css" href="Styles/Elements.css">
+    <link href="Assets/Logo.png" rel="shortcut icon" type="image/png">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="Scripts/Elements.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <nav></nav>
+    <script src="SpaceSimScr/Cartesian.js"></script>
+    <script src="SpaceSimScr/Input.js"></script>
+    <script src="SpaceSimScr/Renderer.js"></script>
+    <script src="SpaceSimScr/Tool.js"></script>
+    <script src="SpaceSimScr/SpaceObject.js"></script>
+    <script src="SpaceSimScr/SpaceSim.js"></script>
+    <script>
+        canvas = new FreeFall(UpdateCan, DrawCan, {
+            width: $(window).width() - 100,
+            height: $(window).height() - 100,
+            forcetype: 2,
+            ui: true
+        });
+        var index = 0;
+        var r = 800;
+        var v = 0;
+        function AddParticle() {
+            if (canvas.Objects.length < 60) canvas.AddObject(new CircularSpaceObject(
+                r - Math.random() * r * 2,
+                400 - Math.random() * r * 2,
+                v - Math.random() * v * 2,
+                v - Math.random() * v * 2,
+                10000,
+                "hsl(" + (index * 2) + ",100%,50%)"));
+            index++;
+            v++;
+        }
+        setInterval(AddParticle, 1000);
+        function UpdateCan() {
+            canvas.Update();
+        }
+        function DrawCan() {
+            canvas.Draw(DrawCan);
+        }
+    </script>
+    <footer></footer>
+</body>
+</html>
