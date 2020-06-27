@@ -11,7 +11,6 @@ class SpaceObject {
         this.Delete = false;
     }
 }
-
 class CircularSpaceObject extends SpaceObject {
     constructor(PositionX, PositionY, VelocityX = 0, VelocityY = 0, mass = 0, colour = "#ffffff") {
         var radius = CircularSpaceObject.Radii(mass);
