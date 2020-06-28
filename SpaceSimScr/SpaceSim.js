@@ -6,24 +6,24 @@
 
 console.log("Loading SpaceSim.js");
 
-class SpaceSim {
+class FreeFall {
     constructor(updatecall, DrawCall, properties = {}) {
-        this._Rate = getprop("rate", 0.01);
-        this.TimeScale = getprop("timescale", 1);
+        Object.assign(this, FreeFall.Default);
+        Object.assign(this, properties)
         this.Root = document.createElement("div");
         this.Root.classList.add("SpaceSimRoot");
+        var canvas = this.Canvas;
         this.Canvas = document.createElement("canvas");
-        this.ID = UniqueID.Get("SpaceSimCanvas");
+        if (this.ID == "") this.ID = UniqueID.Get("SpaceSimCanvas");
         this.Canvas.id = this.ID;
-        this.Canvas.width = getprop("width", 2600);
-        this.Canvas.height = getprop("height", 1500);
+        this.Canvas.width = canvas.width;
+        this.Canvas.height = canvas.height;
         this.Context = this.Canvas.getContext("2d", { alpha: false });
 
         var ScriptPos = document.scripts[document.scripts.length - 1];
 
         ScriptPos.parentElement.insertBefore(this.Root, ScriptPos);
         this.Root.appendChild(this.Canvas);
-        this.UIEnabled = getprop("ui", true);
         if (this.UIEnabled) {
             this.UI = {
                 Root: document.createElement("div"),
@@ -57,33 +57,25 @@ class SpaceSim {
             this.Root.appendChild(this.UI.Root);
         }
 
-        this.Renderer = {
-            X: 0,
-            Y: 0,
-            TempX: 0,
-            TempY: 0,
-            HoldTemp: false,
-            Z: getprop("scale", 1)
-        }
-
-        this.GlobalForce = new GlobalForce(getprop("forcetype", 1));
-        this.Objects = [];
+        var globalforce = this.GlobalForce;
+        this.GlobalForce = new GlobalForce(this.Objects, globalforce.Type);
         this.UpdateCall = updatecall;
         this.Interval = setInterval(updatecall, 1000 * this._Rate);
         window.requestAnimationFrame(DrawCall);
-
-        function getprop(params, def) {
-            if (properties[params] != null) return properties[params];
-            else return def;
-        }
     }
     Update() {
         //var t = performance.now();
         if (this.GlobalForce.Type == 2) {
             var l = this.Objects.length;
             for (let i = 0; i < l; i++) {
-                if (this.Objects[i].Mass == 0) continue;
-                this.GlobalForce.Census[i] = this.Objects[i].Position;
+                if (this.Objects[i].Delete) {
+                    this.Objects.splice(i, 1);
+                    i--;
+                    l--;
+                    continue;
+                }
+                this.Objects[i].ID = i;
+                //if (this.Objects[i].Mass == 0) continue;
             }
         }
         this.Objects.forEach(element => {
@@ -138,8 +130,35 @@ class SpaceSim {
     AddObject(obj) {
         obj.ID = this.Objects.length;
         this.Objects.push(obj);
-        this.GlobalForce.Census.push(obj.Position);
     }
+}
+
+FreeFall.Default = {
+    "_Rate": 0.01,
+    "TimeScale": 1,
+    "Root": {},
+    "Canvas": {
+        width: 1024,
+        height: 1024
+    },
+    "ID": "",
+    "Context": {},
+    "UIEnabled": false,
+    "Renderer": {
+        "X": 0,
+        "Y": 0,
+        "TempX": 0,
+        "TempY": 0,
+        "HoldTemp": false,
+        "Z": 1
+    },
+    "GlobalForce": {
+        "Type": 2,
+        "Gravity": 9.8,
+        "CentralMass": 500000,
+        "Census": []
+    },
+    "Objects": [],
 }
 
 var GlobalForcet = {

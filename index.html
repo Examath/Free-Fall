@@ -24,15 +24,15 @@
         <script src="SpaceSimScr/SpaceObject.js"></script>
         <script src="SpaceSimScr/SpaceSim.js"></script>
         <script>
-            canvas = new SpaceSim(UpdateCan, DrawCan, {
-                width: $(window).width(),
-                height: $(window).height(),
-                forcetype: 2,
-                ui: false
+            canvas = new FreeFall(UpdateCan, DrawCan, {
+                Canvas: {
+                    width: $(window).width() - 100,
+                    height: $(window).height() - 100
+                }
             });
             var index = 0;
             function AddParticle() {
-                if (canvas.Objects.length < 20) canvas.AddObject(new CircularSpaceObject(400 - Math.random() * 800, 400 - Math.random() * 800, 0, 0, 10000, 4, "hsl(" + (index * 5) + ",100%,50%)"));
+                if (canvas.Objects.length < 20) canvas.AddObject(new CircularSpaceObject(400 - Math.random() * 800, 400 - Math.random() * 800, 0, 0, 10000, "hsl(" + (index * 2) + ",100%,50%)"));
                 index++;
             }
             setInterval(AddParticle, 1000);

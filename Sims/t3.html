@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <base href="../">
     <link rel="stylesheet" type="text/css" href="Styles/Elements.css">
     <link href="Assets/Logo.png" rel="shortcut icon" type="image/png">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -20,11 +21,11 @@
     <script src="SpaceSimScr/SpaceSim.js"></script>
     <script>
 canvas = new SpaceSim(UpdateCan, DrawCan, {width: $(window).width()-100,height: $(window).height()-100, forcetype: 2});
-canvas.AddObject(new CircularSpaceObject(-1,1,0,1,200000,16,"green"));
-canvas.AddObject(new CircularSpaceObject(250,1,0,-20,25000,8,"lightblue"));
-canvas.AddObject(new CircularSpaceObject(300,1,0,-40,6200,4,"blue"));
-canvas.AddObject(new CircularSpaceObject(100,1,0,-40,0,2,"yellow"));
-canvas.Objects[3].Forces.push(new KeyControllerForce());
+canvas.AddObject(new CircularSpaceObject(-1,1,0,1,200000,"green"));
+canvas.AddObject(new CircularSpaceObject(250,1,0,-20,25000,"lightblue"));
+canvas.AddObject(new CircularSpaceObject(300,1,0,-40,6200,"blue"));
+canvas.AddObject(new CircularSpaceObject(100,1,0,-40,10,"yellow"));
+canvas.Objects[3].Forces.push(new KeyControllerForce(100));
 function UpdateCan() {
     canvas.Update();
 }

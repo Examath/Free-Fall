@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="../">
+    <link rel="stylesheet" type="text/css" href="Styles/Elements.css">
+    <link href="Assets/Logo.png" rel="shortcut icon" type="image/png">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="Scripts/Elements.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <nav></nav>
+    <button onclick="Run()">Run</button>
+    <textarea id="inp" rows="10" cols="100">
+ID: "can",
+Canvas: {
+    width: $(window).width() - 100,
+    height: $(window).height() - 300
+},
+UIEnabled: true,
+Objects: [
+    new CircularMassObject(
+        {
+            Position: new Vector(50, 50),
+            Velocity: new Vector(x, -x),
+            Mass: 80000,
+            Colour: "#ffff00"
+        }),
+    new CircularMassObject(
+        {
+            Position: new Vector(-50, -50),
+            Velocity: new Vector(-x, x),
+            Mass: 80000,
+            Colour: "#ff00ff"
+        }),
+    new CircularMassObject(
+        {
+            Mass: 10000,
+            Colour: "#00ffff"
+        }),
+]
+    </textarea>
+    <script src="SpaceSimScr/Cartesian.js"></script>
+    <script src="SpaceSimScr/Input.js"></script>
+    <script src="SpaceSimScr/Renderer.js"></script>
+    <script src="SpaceSimScr/Tool.js"></script>
+    <script src="SpaceSimScr/SpaceObject.js"></script>
+    <script src="SpaceSimScr/SpaceSim.js"></script>
+    <script>
+        var x = 16;
+        d = {
+            ID: "can",
+            Canvas: {
+                width: $(window).width() - 100,
+                height: $(window).height() - 300
+            },
+            UIEnabled: true,
+            Objects: [
+                new CircularMassObject(
+                    {
+                        Position: new Vector(50, 50),
+                        Velocity: new Vector(10, -10),
+                        Mass: 80000,
+                        Colour: "#ffff00"
+                    }),
+                new CircularMassObject(
+                    {
+                        Position: new Vector(-50, -50),
+                        Velocity: new Vector(-10, 10),
+                        Mass: 80000,
+                        Colour: "#ff00ff"
+                    }),
+                new CircularMassObject(
+                    {
+                        Velocity: new Vector(-1, 1),
+                        Mass: 20000,
+                        Colour: "#00ffff"
+                    }),
+            ]
+        }
+        function Run() {
+            $("#can").remove();
+            var t = "var prop = {" + document.getElementById("inp").value + "};";
+
+            eval(t);
+
+            canvas = new FreeFall(UpdateCan, DrawCan, prop);
+            function UpdateCan() {
+                canvas.Update();
+            }
+            function DrawCan() {
+                canvas.Draw(DrawCan);
+            }
+        }
+    </script>
+    <footer></footer>
+</body>
+
+</html>
