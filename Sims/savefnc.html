@@ -23,8 +23,25 @@ Canvas: {
 },
 UIEnabled: true,
 Objects: [
-    new CircularSpaceObject(50, 50, 10, -10, 80000, "white"),
-    new CircularSpaceObject(-50, -50, -10, 10, 75000, "grey")
+    new CircularMassObject(
+        {
+            Position: new Vector(50, 50),
+            Velocity: new Vector(x, -x),
+            Mass: 80000,
+            Colour: "#ffff00"
+        }),
+    new CircularMassObject(
+        {
+            Position: new Vector(-50, -50),
+            Velocity: new Vector(-x, x),
+            Mass: 80000,
+            Colour: "#ff00ff"
+        }),
+    new CircularMassObject(
+        {
+            Mass: 10000,
+            Colour: "#00ffff"
+        }),
 ]
     </textarea>
     <script src="SpaceSimScr/Cartesian.js"></script>
@@ -34,12 +51,43 @@ Objects: [
     <script src="SpaceSimScr/SpaceObject.js"></script>
     <script src="SpaceSimScr/SpaceSim.js"></script>
     <script>
+        var x = 16;
+        d = {
+            ID: "can",
+            Canvas: {
+                width: $(window).width() - 100,
+                height: $(window).height() - 300
+            },
+            UIEnabled: true,
+            Objects: [
+                new CircularMassObject(
+                    {
+                        Position: new Vector(50, 50),
+                        Velocity: new Vector(10, -10),
+                        Mass: 80000,
+                        Colour: "#ffff00"
+                    }),
+                new CircularMassObject(
+                    {
+                        Position: new Vector(-50, -50),
+                        Velocity: new Vector(-10, 10),
+                        Mass: 80000,
+                        Colour: "#ff00ff"
+                    }),
+                new CircularMassObject(
+                    {
+                        Velocity: new Vector(-1, 1),
+                        Mass: 20000,
+                        Colour: "#00ffff"
+                    }),
+            ]
+        }
         function Run() {
-            $("#can").remove();        
+            $("#can").remove();
             var t = "var prop = {" + document.getElementById("inp").value + "};";
-            console.log(t);
+
             eval(t);
-            console.log(prop);
+
             canvas = new FreeFall(UpdateCan, DrawCan, prop);
             function UpdateCan() {
                 canvas.Update();

@@ -48,70 +48,43 @@ class Physic {
 }
 
 class GlobalForce {
-    constructor(type = 1, gravity = 9.8, centralMass = 500000) {
+    constructor(data, type = 1, gravity = 9.8, centralMass = 500000) {
         this.Type = type;
         this.Gravity = gravity;
         this.CentralMass = centralMass;
-        this.Census = [];
+        this.Data = data;
     }
-    Get(position, id) {
-        switch (this.Type) {
-            case 0:
-                return new Vector(0, -this.Gravity);
-            case 1:
-                var a = this.Gravity * this.CentralMass / position.Influence;
-                var x = a * position.RX * -1;
-                var y = a * position.RY * -1;
-                var force = new Vector(x, y);
-                return force;
-            case 2:
-                var x = 0;
-                var y = 0;
-                var l = this.Census.length;
-                for (var i = 0; i < l; i++) {
-                    if (this.Census[i].Mass <= 0 || i == id) continue;
-                    var lX = this.Census[i].X - position.X;
-                    var lY = this.Census[i].Y - position.Y;
-                    var r2 = lX * lX + lY * lY;
-                    var r = Math.sqrt(r2);
-                    var a = this.Census[i].Mass / r2;
-                    x += a * lX / r;
-                    y += a * lY / r;
-                };
-                return new Vector(x, y);
-                break;
-        }
-    }
-    GetFC(physic, id) {
+    GetFC(object) {
         switch (this.Type) {
             case 0:
                 return { Collide: false, Force: new Vector(0, -this.Gravity)};
             case 1:
-                var a = this.Gravity * this.CentralMass / physic.Influence;
-                var x = a * physic.RX * -1;
-                var y = a * physic.RY * -1;
+                var a = this.Gravity * this.CentralMass / object.Position.X ** 2 + object.Position.Y ** 2;
+                var x = a * object.RX * -1;
+                var y = a * object.RY * -1;
                 var force = new Vector(x, y);
                 return { Collide: false, Force: force};
             case 2:
                 var x = 0;
                 var y = 0;
                 var c = false;
-                var l = this.Census.length;
+                var l = this.Data.length;
+                var id = object.ID;
                 for (var i = 0; i < l; i++) {
-                    if (this.Census[i].Mass <= 0 || i == id) continue;
-                    var lX = this.Census[i].Position.X - physic.Position.X;
-                    var lY = this.Census[i].Position.Y - physic.Position.Y;
+                    if (this.Data[i].Mass <= 0 || i == id) continue;
+                    var lX = this.Data[i].Position.X - object.Position.X;
+                    var lY = this.Data[i].Position.Y - object.Position.Y;
                     var r2 = lX * lX + lY * lY;
-                    if (physic.Radius2 + this.Census[i].Radius2 > r2) {
-                        if (physic.Mass > this.Census[i].Mass) c = this.Census[i];
-                        else if (physic.Mass < this.Census[i].Mass) c = true;
+                    if (object.Radius2 + this.Data[i].Radius2 > r2) {
+                        if (object.Mass > this.Data[i].Mass) c = this.Data[i];
+                        else if (object.Mass < this.Data[i].Mass) c = true;
                         else {
-                            if (id > i) c = this.Census[i];
+                            if (id > i) c = this.Data[i];
                             else c = true;
                         }
                     }
                     var r = Math.sqrt(r2);
-                    var a = this.Census[i].Mass / r2;
+                    var a = this.Data[i].Mass / r2;
                     x += a * lX / r;
                     y += a * lY / r;
                 };

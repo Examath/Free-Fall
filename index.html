@@ -24,11 +24,11 @@
         <script src="SpaceSimScr/SpaceObject.js"></script>
         <script src="SpaceSimScr/SpaceSim.js"></script>
         <script>
-            canvas = new SpaceSim(UpdateCan, DrawCan, {
-                width: $(window).width(),
-                height: $(window).height(),
-                forcetype: 2,
-                ui: false
+            canvas = new FreeFall(UpdateCan, DrawCan, {
+                Canvas: {
+                    width: $(window).width() - 100,
+                    height: $(window).height() - 100
+                }
             });
             var index = 0;
             function AddParticle() {

@@ -58,7 +58,7 @@ class FreeFall {
         }
 
         var globalforce = this.GlobalForce;
-        this.GlobalForce = new GlobalForce(globalforce.Type);
+        this.GlobalForce = new GlobalForce(this.Objects, globalforce.Type);
         this.UpdateCall = updatecall;
         this.Interval = setInterval(updatecall, 1000 * this._Rate);
         window.requestAnimationFrame(DrawCall);
@@ -70,14 +70,12 @@ class FreeFall {
             for (let i = 0; i < l; i++) {
                 if (this.Objects[i].Delete) {
                     this.Objects.splice(i, 1);
-                    this.GlobalForce.Census.splice(i, 1);
                     i--;
                     l--;
                     continue;
                 }
                 this.Objects[i].ID = i;
-                if (this.Objects[i].Physic.Mass == 0) continue;
-                this.GlobalForce.Census[i] = this.Objects[i].Physic;
+                //if (this.Objects[i].Mass == 0) continue;
             }
         }
         this.Objects.forEach(element => {
@@ -132,7 +130,6 @@ class FreeFall {
     AddObject(obj) {
         obj.ID = this.Objects.length;
         this.Objects.push(obj);
-        this.GlobalForce.Census.push(obj.Physic);
     }
 }
 

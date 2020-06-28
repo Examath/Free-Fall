@@ -20,14 +20,40 @@
     <script src="SpaceSimScr/SpaceSim.js"></script>
     <script>
 
-        canvas = new SpaceSim(UpdateCan, DrawCan, { width: 1300, height: 750 });
-        {
-            var o = new CircularSpaceObject(0, 150, -160, 0, 4, 4, "#00ffff");
-            o.Forces.push(new KeyControllerForce());
-            canvas.Objects.push(o);
-        }
-        canvas.Objects.push(new CircularSpaceObject(0, 400, -110, 0, 0, 8, "#00ff00"));
-        canvas.Objects.push(new StaticCircularSpaceObject(0, 0, 0, 20));
+        canvas = new FreeFall(UpdateCan, DrawCan, {
+            Canvas: {
+                width: 1300, height: 750
+            },
+            UIEnabled: true,
+            Objects: [
+                new CircularMassObject({
+                    Position: new Vector(0, 150),
+                    Velocity: new Vector(-160, 0),
+                    Mass: 40,
+                    Colour: "#ffff00",
+                    Forces: [
+                        new KeyControllerForce(100)
+                    ]
+                }),
+                new CircularMassObject({
+                    Position: new Vector(0, 400),
+                    Velocity: new Vector(-110, 0),
+                    Mass: 4000,
+                    Colour: "#aaaaaa"
+                }),
+                new CircularMassObject({
+                    Mass: 4000000,
+                    Colour: "#00ffff"
+                })
+            ]
+        });
+        // {
+        //     var o = new CircularSpaceObject(0, 150, -160, 0, 4, 4, "#00ffff");
+        //     o.Forces.push(new KeyControllerForce());
+        //     canvas.Objects.push(o);
+        // }
+        // canvas.Objects.push(new CircularSpaceObject(0, 400, -110, 0, 0, 8, "#00ff00"));
+        // canvas.Objects.push(new StaticCircularSpaceObject(0, 0, 0, 20));
         function UpdateCan() {
             canvas.Update();
         }
