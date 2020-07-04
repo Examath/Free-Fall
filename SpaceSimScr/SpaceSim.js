@@ -10,12 +10,13 @@ class FreeFall {
     constructor(updatecall, DrawCall, properties = {}) {
         Object.assign(this, FreeFall.Default);
         Object.assign(this, properties)
+        if (this.ID == "") this.ID = UniqueID.Get("SpaceSimCanvas");
         this.Root = document.createElement("div");
+        this.Root.id = this.ID;
         this.Root.classList.add("SpaceSimRoot");
         var canvas = this.Canvas;
         this.Canvas = document.createElement("canvas");
-        if (this.ID == "") this.ID = UniqueID.Get("SpaceSimCanvas");
-        this.Canvas.id = this.ID;
+        this.Canvas.id = this.ID + "can";
         this.Canvas.width = canvas.width;
         this.Canvas.height = canvas.height;
         this.Context = this.Canvas.getContext("2d", { alpha: false });
@@ -84,11 +85,11 @@ class FreeFall {
         if (this.UIEnabled) {
             this.UI.Update();
 
-            if (MouseInputManager.MouseDown && MouseInputManager.MouseClickTarget == this.ID) {
+            if (MouseInputManager.MouseDown && MouseInputManager.MouseClickTarget == this.ID + "can") {
                 this.UI.Toolbar.Tools[this.UI.Toolbar.SelectedTool].ApplyToolInput(this, true);
             }
             var ln = this.UI.Toolbar.Tools.length;
-            if (MouseInputManager.MouseMoveTarget == this.ID) {
+            if (MouseInputManager.MouseMoveTarget == this.ID + "can") {
                 for (let i = 0; i < ln; i++) {
                     if (i == this.UI.Toolbar.SelectedTool) continue;
                     this.UI.Toolbar.Tools[i].ApplyToolInput(this);
@@ -101,6 +102,10 @@ class FreeFall {
                 this.Renderer.TempX = 0;
                 this.Renderer.TempY = 0;
             }
+        }
+        if (this.ref != null) {
+            this.Renderer.X = -this.Objects[this.ref].Position.X;
+            this.Renderer.Y = this.Objects[this.ref].Position.Y;
         }
         //document.getElementById("fu").innerHTML = performance.now() - t;
     }
@@ -130,6 +135,33 @@ class FreeFall {
     AddObject(obj) {
         obj.ID = this.Objects.length;
         this.Objects.push(obj);
+    }
+    toString() {
+        return `{
+    "_Rate": ${this.Rate},
+    "TimeScale": ${this.TimeScale},
+    "Canvas": {
+        width: ${this.Canvas.width},
+        height: ${this.Canvas.height}
+    },
+    "UIEnabled": ${this.UIEnabled},
+    "Renderer": {
+        "X": ${this.Renderer.X},
+        "Y": ${this.Renderer.Y},
+        "TempX": ${this.Renderer.TempX},
+        "TempY": ${this.Renderer.TempY},
+        "HoldTemp": ${this.Renderer.HoldTemp},
+        "Z": ${this.Renderer.Z}
+    },
+    "GlobalForce": {
+        "Type": ${this.GlobalForce.Type},
+        "Gravity": ${this.GlobalForce.Gravity},
+        "CentralMass": ${this.GlobalForce.CentralMass},
+        "Census": ${this.GlobalForce.Census}
+    },
+    "Objects": [${this.Objects.toString()}
+    ]
+}`
     }
 }
 
