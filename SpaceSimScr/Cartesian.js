@@ -36,6 +36,9 @@ class Vector {
         this.X += V.X * Rate;
         this.Y += V.Y * Rate;
     };
+    toString() {
+        return `new Vector(${this.X},${this.Y})`;
+    }
 }
 
 class Physic {

@@ -8,29 +8,37 @@ class SpaceObject {
         //this.Physic = new Physic(PositionX, PositionY, VelocityX, VelocityY, mass, radius);
         //this.Forces = [];
         Object.assign(this, {
-            Position: new Vector(0,0),
-            Velocity: new Vector(0,0),
+            Position: new Vector(0, 0),
+            Velocity: new Vector(0, 0),
             Mass: 0,
             Radius2: 1,
             Forces: []
         });
-        properties.forEach(property => {                
+        properties.forEach(property => {
             Object.assign(this, property);
         });
         this.ID = 0;
         this.Delete = false;
-    }    
+    }
     get Radius() {
         return Math.sqrt(this.Radius2);
     }
     set Radius(X) {
         this.Radius2 = X * X;
     }
+    deconstructor() {
+        return `
+            Position: ${this.Position.toString()}, 
+            Velocity: ${this.Velocity.toString()}, 
+            Mass: ${this.Mass}, 
+            Radius2: ${this.Radius2}`; 
+        //TODO: Support this.Forces decompose
+    }
 }
 
 SpaceObject.Default = {
-    Position: new Vector(0,0),
-    Velocity: new Vector(0,0),
+    Position: new Vector(0, 0),
+    Velocity: new Vector(0, 0),
     Mass: 0,
     Radius2: 1,
     Forces: [],
@@ -127,6 +135,12 @@ class CircularMassObject extends SpaceObject {
     }
     static Radii(mass) {
         return Math.cbrt(mass) / 2;
+    }
+    toString() {
+        return `
+        new CircularMassObject({${this.deconstructor()},
+            Colour: "${this.Colour}"
+        })` 
     }
 }
 
